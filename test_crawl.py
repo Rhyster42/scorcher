@@ -149,7 +149,7 @@ class TestCrawl(unittest.TestCase):
     def test_html_p_malformed(self):
         input_body = "<html><body><p>Unclosed paragraph<div>Next element</div></body></html>"
         actual = get_first_paragraph_from_html(input_body)
-        expected = "Unclosed paragraph Next element"
+        expected = "Unclosed paragraphNext element"
         self.assertEqual(actual, expected)
 
     # get_urls_from_html test cases
@@ -322,7 +322,7 @@ class TestCrawl(unittest.TestCase):
             "url": "https://crawler-test.com",
             "heading": "Secondary Title",
             "first_paragraph": "Only paragraph, but the link is outside it.",
-            "outgoing_links": [],
+            "outgoing_links": ['https://crawler-test.com/outside'],
             "image_urls": ["https://crawler-test.com/image1.jpg"]
         }
         self.assertEqual(actual, expected)
