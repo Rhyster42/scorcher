@@ -1,5 +1,5 @@
 import unittest
-from crawl import normalize_url, get_heading_from_html
+from crawl import normalize_url, get_heading_from_html, get_first_paragraph_from_html
 
 class TestCrawl(unittest.TestCase):
 
@@ -89,6 +89,67 @@ class TestCrawl(unittest.TestCase):
         input_body = '<html><body><h2>Secondary</h2><h1>Main</h1></body></html>'
         actual = get_heading_from_html(input_body)
         expected = "Main"
+        self.assertEqual(actual, expected)
+
+    # get_first_paragraph_from_html
+
+    def test_get_first_paragraph_from_html_main_priority(self):
+        input_body = '''<html><body>
+            <p>Outside paragraph.</p>
+            <main>
+                <p>Main paragraph.</p>
+            </main>
+        </body></html>'''
+        actual = get_first_paragraph_from_html(input_body)
+        expected = "Main paragraph."
+        self.assertEqual(actual, expected)
+
+    def test_html_with_p(self):
+        input_body = "<html><body><p>This is the first paragraph.</p></body></html>"
+        actual = get_first_paragraph_from_html(input_body)
+        expected = "This is the first paragraph."
+        self.assertEqual(actual, expected)
+
+    def test_html_multiple_p(self):
+        input_body = "<html><body><p>First paragraph.</p><p>Second paragraph.</p></body></html>"
+        actual = get_first_paragraph_from_html(input_body)
+        expected = "First paragraph."
+        self.assertEqual(actual, expected)
+
+    def test_html_no_p(self):
+        input_body = "<html><body><h1>Just a title</h1></body></html>"
+        actual = get_first_paragraph_from_html(input_body)
+        expected = ""
+        self.assertEqual(actual, expected)
+
+    def test_html_empty_body(self):
+        input_body = "<html><body></body></html>"
+        actual = get_first_paragraph_from_html(input_body)
+        expected = ""
+        self.assertEqual(actual, expected)
+
+    def test_html_nested_p(self):
+        input_body = "<html><body><p>This has <strong>bold</strong> and <em>italic</em> text.</p></body></html>"
+        actual = get_first_paragraph_from_html(input_body)
+        expected = "This has bold and italic text."
+        self.assertEqual(actual, expected)
+
+    def test_html_p_empty_tag(self):
+        input_body = "<html><body><p></p></body></html>"
+        actual = get_first_paragraph_from_html(input_body)
+        expected = ""
+        self.assertEqual(actual, expected)
+
+    def test_html_p_in_div(self):
+        input_body = "<html><body><div><p>Paragraph inside a div.</p></div></body></html>"
+        actual = get_first_paragraph_from_html(input_body)
+        expected = "Paragraph inside a div."
+        self.assertEqual(actual, expected)
+
+    def test_html_p_malformed(self):
+        input_body = "<html><body><p>Unclosed paragraph<div>Next element</div></body></html>"
+        actual = get_first_paragraph_from_html(input_body)
+        expected = "Unclosed paragraph Next element"
         self.assertEqual(actual, expected)
 
 

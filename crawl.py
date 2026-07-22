@@ -19,3 +19,12 @@ def get_heading_from_html(html: str) -> str:
         h_tag = soup.h2
     
     return h_tag.get_text(strip=True, separator=" ") if isinstance(h_tag, Tag) else ""
+
+def get_first_paragraph_from_html(html: str) -> str:
+    soup = BeautifulSoup(html, 'html.parser')
+
+    p_tag = soup.p
+    if isinstance(soup.main, Tag):
+        p_tag = soup.main.p
+
+    return p_tag.get_text(strip=True, separator=" ") if isinstance(p_tag, Tag) else ""
