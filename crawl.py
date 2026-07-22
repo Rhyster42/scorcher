@@ -31,26 +31,34 @@ def get_urls_from_html(html: str, base_url: str):
     soup = BeautifulSoup(html, 'html.parser')
     abs_path_list = []
 
-    a_tag_list = soup.find_all('a')
+    anchors = soup.find_all('a')
 
-    for item in a_tag_list:
-        href = item.get('href') 
-        if href == None or href == "":
+    for item in anchors:
+        if not isinstance(item, Tag):
             continue
-        abs_path_list.append(urljoin(base_url, href))
+        href = item.get('href') 
+        if isinstance(href, str) and href:
+            try:
+                abs_path_list.append(urljoin(base_url, href))
+            except Exception as e:
+                print(f'{str(e)}: {href}')
    
     return abs_path_list
 
 def get_images_from_html(html: str, base_url: str):
     soup = BeautifulSoup(html, 'html.parser')
-    image_list = []
+    image_path_list = []
 
     img_tag_list = soup.find_all('img')
 
     for item in img_tag_list:
-        src = item.get('src')
-        if src == None or src == "":
+        if not isinstance(item, Tag):
             continue
-        image_list.append(urljoin(base_url, src))
+        src = item.get('src')
+        if isinstance(src, str) and src:
+            try:
+                image_path_list.append(urljoin(base_url, src))
+            except Exception as e:
+                print(f'{str(e)}: {src}')
 
-    return image_list
+    return image_path_list
