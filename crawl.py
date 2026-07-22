@@ -34,10 +34,23 @@ def get_urls_from_html(html: str, base_url: str):
     a_tag_list = soup.find_all('a')
 
     for item in a_tag_list:
-        url = item.get('href') 
-        if url == None or url == "":
+        href = item.get('href') 
+        if href == None or href == "":
             continue
-        abs_path_list.append(urljoin(base_url, url))
-   
+        abs_path_list.append(urljoin(base_url, href))
    
     return abs_path_list
+
+def get_images_from_html(html: str, base_url: str):
+    soup = BeautifulSoup(html, 'html.parser')
+    image_list = []
+
+    img_tag_list = soup.find_all('img')
+
+    for item in img_tag_list:
+        src = item.get('src')
+        if src == None or src == "":
+            continue
+        image_list.append(urljoin(base_url, src))
+
+    return image_list
