@@ -1,5 +1,6 @@
 import sys, requests, asyncio
 from crawl import crawl_site_async
+from json_report import write_json_report
 
 async def main() -> None:
     args = sys.argv
@@ -28,8 +29,7 @@ async def main() -> None:
 
     data = await crawl_site_async(base_url, max_concurrency, max_pages)
 
-    for page in data.values():
-        print(f'Located {len(page["outgoing_links"])} outgoing links on {page["url"]}')
+    write_json_report(data)
 
     sys.exit(0)
 
